@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+.margin-btm{  
+  margin-bottom: 10px;
+}
+
+.coach-icon {
+  position: fixed; /* Use fixed for consistent positioning */
+  bottom: 20px; /* Margin from the bottom */
+  right: 20px; /* Margin from the right */
+  width: 60px;
+  height: 60px;
+  background: #0d6efd;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.coach-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}

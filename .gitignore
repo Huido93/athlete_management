@@ -1,0 +1,54 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+client/node_modules/
+server/node_modules/
+/.pnp
+.pnp.js
+
+# Cache directories
+client/node_modules/.cache/
+# Consider adding other common cache directories
+/.cache
+/.parcel-cache
+/tmp
+/temp
+
+# testing
+/coverage
+# Add other test-related files or directories if necessary
+/junit-report.xml
+/test-results/
+
+# production
+/build
+/dist
+/out
+# Add other production-related directories if necessary
+
+# misc
+.DS_Store
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+# Add other environment-specific files if necessary
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# Add other editor-specific directories and files if necessary
