@@ -1,6 +1,6 @@
 import './App.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
+import { Router, Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Nav, Navbar, Button} from 'react-bootstrap';
 import axios from 'axios'
@@ -17,18 +17,20 @@ import { logoutUser } from "./store/userSlice.js"
 function App() {
 
   return (
-    <>
-    <NavigationBar></NavigationBar>
-      <Routes>
-        <Route path="/" element={ <Home /> } />
-        <Route path="/login" element={ <Login /> } />
-        <Route path="/register" element={ <Register /> } />
-        <Route path="/newsession" element={ <NewSession /> } />
-        <Route path="/sessions" element={ <WorkoutSessions /> } />
-        <Route path="/workoutlogs/:id" element={ <WorkoutLogs /> } />
-        <Route path="/profile/:id" element={ <Profile /> } />
-      </Routes>
-    </>
+    <Router basename="/athlete_management">
+      <>
+        <NavigationBar />
+        <Routes>
+          <Route path="/" element={ <Home /> } />
+          <Route path="/login" element={ <Login /> } />
+          <Route path="/register" element={ <Register /> } />
+          <Route path="/newsession" element={ <NewSession /> } />
+          <Route path="/sessions" element={ <WorkoutSessions /> } />
+          <Route path="/workoutlogs/:id" element={ <WorkoutLogs /> } />
+          <Route path="/profile/:id" element={ <Profile /> } />
+        </Routes>
+      </>
+    </Router>
   );
 }
 
