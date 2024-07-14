@@ -38,13 +38,13 @@ function Home(){
 
 function CoachCard({handleShow}){
     return(
-        <Row className="justify-content-center">
+        <Row className="justify-content-center" style={{marginTop: '10px'}}>
             <Col md={10}>
                 <Card className="text-center shadow-lg">
                     <Card.Body>
                         <Row className="align-items-center">
                             <Col md={8}>
-                                A list of coaches
+                                <h5> Coach List to be added</h5>
                             </Col>
                             <Col md={4}>
                                 <Button variant="primary" onClick={handleShow}>

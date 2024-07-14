@@ -1,6 +1,6 @@
 import './App.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Nav, Navbar, Button} from 'react-bootstrap';
 import axios from 'axios'
@@ -17,7 +17,6 @@ import { logoutUser } from "./store/userSlice.js"
 function App() {
 
   return (
-    <Router basename="/athlete_management">
       <>
         <NavigationBar />
         <Routes>
@@ -30,7 +29,6 @@ function App() {
           <Route path="/profile/:id" element={ <Profile /> } />
         </Routes>
       </>
-    </Router>
   );
 }
 
