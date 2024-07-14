@@ -1,7 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const { MongoClient, ObjectId } = require('mongodb')
 const bcrypt = require('bcrypt') 
-const app = express()
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
@@ -9,10 +9,11 @@ const path = require('path');
 const cors = require('cors');
 const moment = require('moment');
 
+const app = express();
 
 let db; 
 
-const url = 'mongodb+srv://dhdpark:0gMYPszy5VRexFBj@athlete-management-prod.flvewzi.mongodb.net/?retryWrites=true&w=majority&appName=athlete-management-prod'
+const url = process.env.DATABASE_URL 
 new MongoClient(url).connect().then((client)=>{
   console.log('DB연결성공')
   db = client.db('athlete_management')
@@ -20,8 +21,16 @@ new MongoClient(url).connect().then((client)=>{
   console.log(err) 
 })
 
-app.use(express.static(__dirname + '/public'));
-app.use(express.static(path.join(__dirname, 'react_project/build')));
+// Serve static files only in development environment
+if (process.env.NODE_ENV === 'development') {
+  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(path.join(__dirname, 'client/build')));
+}
+
+// Example API endpoint
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello from the server!' });
+});
 
 app.set('view engine', 'ejs') 
 
@@ -31,10 +40,15 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true})) 
 
 // 다른 도메인주소끼리 ajax 요청 주고받을 때 필요
-app.use(cors());
+app.use(cors(
+  {
+   origin:'https://huido93.github.io/athlete_management',
+   credentials: true 
+  }
+));
 
 app.use(session({ 
-  secret : 'qkrgmleh!23',
+  secret : process.env.SESSION_SECRET,
   resave : false,
   saveUninitialized : false,
   // 세션 한시간 유지
@@ -88,14 +102,18 @@ function isAuthenticated(req, res, next) {
 }
 
 
-app.listen(8080, () => {
-    console.log('http://localhost:8080 에서 서버 실행중')
-})
+// Start the server
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`Server running on port ${process.env.PORT || 8080}`);
+});
 
 
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '/react_project/build/index.html'));
+// Serve React app's index.html in development environment
+if (process.env.NODE_ENV === 'development') {
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build/index.html'));
   });
+}
 
 app.post('/login', async (요청, 응답, next) => {
   passport.authenticate('local', (error, user, info) => {

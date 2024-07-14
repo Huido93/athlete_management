@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Form, Modal, CardBody } from 'react-
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser } from '../store/userSlice';
-import axios from 'axios'
+import axios from './../axios.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 

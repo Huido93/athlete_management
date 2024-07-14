@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Nav, Navbar, Button} from 'react-bootstrap';
-import axios from 'axios'
+import axios from './axios.js'
 import Login from './routes/login.js'
 import Home from './routes/home.js'
 import Register from './routes/register.js'

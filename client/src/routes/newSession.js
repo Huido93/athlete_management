@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from './../axios.js';
 import moment from 'moment';
 import useAuthCheck from '../hook/authCheck';
 

@@ -1,6 +1,6 @@
 import './../App.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from './../axios.js';
 import { Table, Card, Row, Col, Container, Form, Button, Accordion, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import useAuthCheck from '../hook/authCheck';

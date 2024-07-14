@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import axios from './../axios.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useAuthCheck from '../hook/authCheck';
 import { useNavigate } from 'react-router-dom'

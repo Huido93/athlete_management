@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import useAuthCheck from '../hook/authCheck';
-import axios from 'axios'
+import axios from './../axios.js';
 // import { fetchUser, loginUser, logoutUser } from './store/userSlice';
 
 
