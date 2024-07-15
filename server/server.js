@@ -28,8 +28,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Example API endpoint
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from the server!' });
+app.get('/', (req, res) => {
+  res.send({ message: 'Hello from the server!' });
 });
 
 app.set('view engine', 'ejs') 
@@ -103,17 +103,16 @@ function isAuthenticated(req, res, next) {
 
 
 // Start the server
-app.listen(process.env.PORT || 8080, () => {
-  console.log(`Server running on port ${process.env.PORT || 8080}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 
-// Serve React app's index.html in development environment
-if (process.env.NODE_ENV === 'development') {
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build/index.html'));
-  });
-}
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client/build/index.html'));
+// });
+
 
 app.post('/login', async (요청, 응답, next) => {
   passport.authenticate('local', (error, user, info) => {
