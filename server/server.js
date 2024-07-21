@@ -103,9 +103,8 @@ function isAuthenticated(req, res, next) {
 
 
 // Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(8080,'0.0.0.0', () => {
+  console.log(`Server is running on port 8080`);
 });
 
 
