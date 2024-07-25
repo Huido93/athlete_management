@@ -21,6 +21,7 @@ function Login() {
     .unwrap()
     .then(() => {
       dispatch(fetchUser()); // Fetch user data after login
+      console.log('login data fetched')
       navigate('/');
     })
     .catch(() => {

@@ -21,11 +21,11 @@ new MongoClient(url).connect().then((client)=>{
   console.log(err) 
 })
 
-// Serve static files only in development environment
-if (process.env.NODE_ENV === 'development') {
-  app.use(express.static(__dirname + '/public'));
-  app.use(express.static(path.join(__dirname, 'client/build')));
-}
+// // Serve static files only in development environment
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(express.static(__dirname + '/public'));
+//   app.use(express.static(path.join(__dirname, 'client/build')));
+// }
 
 // Example API endpoint
 app.get('/', (req, res) => {
@@ -39,13 +39,22 @@ app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({extended:true})) 
 
-// 다른 도메인주소끼리 ajax 요청 주고받을 때 필요
-app.use(cors(
-  {
-   origin:'https://huido93.github.io/athlete_management',
-   credentials: true 
-  }
-));
+// Define allowed origins
+const allowedOrigins = ['https://huido93.github.io', 'http://localhost:3001'];
+
+// CORS configuration
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
 app.use(session({ 
   secret : process.env.SESSION_SECRET,
@@ -103,8 +112,9 @@ function isAuthenticated(req, res, next) {
 
 
 // Start the server
-app.listen(8080,'0.0.0.0', () => {
-  console.log(`Server is running on port 8080`);
+const port = 8080;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 
@@ -113,16 +123,25 @@ app.listen(8080,'0.0.0.0', () => {
 // });
 
 
-app.post('/login', async (요청, 응답, next) => {
+app.post('/login', async (req, res, next) => {
   passport.authenticate('local', (error, user, info) => {
-      if (error) return 응답.status(500).json(error)
-      if (!user) return 응답.status(401).json(info.message)
-      요청.logIn(user, (err) => {
-        if (err) return next(err)
-        응답.redirect('/')
-      })
-  })(요청, 응답, next)
-}) 
+    if (error) {
+      console.error('Authentication error:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (!user) {
+      return res.status(401).json({ message: info.message || 'Unauthorized' });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error('Login error:', err);
+        return next(err);
+      }
+      console.log(req.user)
+      return res.json({ message: 'Login successful' });
+    });
+  })(req, res, next);
+});
 
 app.get('/loggedin', async (req, res) => {
   res.send(req.user)
