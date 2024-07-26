@@ -11,10 +11,14 @@ export const loginUser = createAsyncThunk('user/loginUser', async (credentials) 
 
 // Async thunk for fetching the user data
 export const fetchUser = createAsyncThunk('user/fetchUser', async () => {
-  
-  const response = await axios.get('/loggedin');
-  console.log(response.data)
-  return response.data; // Assuming this returns the user data
+  try {
+    const response = await axios.get('/loggedin');
+    console.log(`fetchUser: ${response.data}`)
+    return response.data; 
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
 });
 
 const userSlice = createSlice({
