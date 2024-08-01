@@ -16,22 +16,20 @@ const WorkoutSessions = () => {
   const [sessions, setSessions] = useState([]);
   const [activeTab, setActiveTab] = useState('list');
 
-  useEffect(() => {
+  let navigate = useNavigate();
 
   const fetchSessions = async () => {
-      try {
-          const response = await axios.get('/sessions');
-          setSessions(response.data);
-      } catch (error) {
-          console.error('Error fetching sessions:', error);
-      }
+    try {
+        const response = await axios.get('/sessions');
+        setSessions(response.data);
+    } catch (error) {
+        console.error('Error fetching sessions:', error);
+    }
   };
 
-  fetchSessions();
-  
+  useEffect(() => {
+    fetchSessions();  
   },[]);
-
-  let navigate = useNavigate();
 
   return (
     <>
@@ -84,11 +82,25 @@ const WorkoutSessions = () => {
   );
 };
 
-const ListView = ({sessions}) => {
+const ListView = ({sessions, fetchSessions}) => {
 
   let navigate = useNavigate();
 
   const sortedSessions = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const handleDelete = async (sessionId) => {
+    const confirmed = window.confirm('Are you sure you want to delete this session and all associated workout logs?');
+    if (confirmed) {
+      try {
+        await axios.delete(`/delete-session/${sessionId}`);
+        // Fetch sessions again to update the state
+        fetchSessions();
+        alert('Session and associated workout logs deleted successfully');
+      } catch (error) {
+        console.error('Error deleting session:', error);
+      }
+    }
+  };
 
     return (
       <div>
@@ -97,7 +109,16 @@ const ListView = ({sessions}) => {
             {sortedSessions.map((session) => (
               <li key={session._id} className="list-group-item d-flex justify-content-between align-items-center">
                 <p onClick={()=>{navigate(`/workoutlogs/${session._id}`)}} >{session.name}</p>
-                <span>{session.formattedDate}</span>
+                <div>
+                  <span style={{ marginRight: '10px' }} >{session.formattedDate}</span>
+                  <button 
+                    className="btn btn-danger btn-sm" 
+                    style={{ backgroundColor: '#d9534f', borderColor: '#d43f3a' }} 
+                    onClick={() => handleDelete(session._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

@@ -11,6 +11,7 @@ import WorkoutSessions from './routes/sessions.js'
 import NewSession from './routes/newSession.js'
 import WorkoutLogs from './routes/workoutLogs.js'
 import Profile from './routes/profile.js';
+import Analytics from './routes/analytics.js';
 import { logoutUser } from "./store/userSlice.js"
 
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/sessions" element={ <WorkoutSessions /> } />
           <Route path="/workoutlogs/:id" element={ <WorkoutLogs /> } />
           <Route path="/profile/:id" element={ <Profile /> } />
+          <Route path="/analytics" element={ <Analytics /> } />
         </Routes>
       </>
   );
@@ -40,7 +42,7 @@ function NavigationBar(){
 
 async function handleLogout() {
   try {
-    await axios.post('/logout');
+    // await axios.post('/logout');
     dispatch(logoutUser());
     navigate('/');
   } catch (error) {
@@ -55,12 +57,12 @@ async function handleLogout() {
             navigate('/');
             }}
             style={{ cursor: 'pointer' }}
-            >Athlete Management</Navbar.Brand>
+            >🏋️‍♂️Athlete Management</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link onClick={() => navigate('/sessions')}>Sessions</Nav.Link>
-              <Nav.Link onClick={() => navigate('/newsession')}>Start Workout</Nav.Link>
+              <Nav.Link onClick={() => navigate('/analytics')}>Analytics</Nav.Link>
               <Nav.Link onClick={() => navigate('/programs')}>Workout Programs</Nav.Link>
             </Nav>
             <Nav className="ms-auto">   

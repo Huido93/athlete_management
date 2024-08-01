@@ -39,7 +39,7 @@ function NewSession() {
         axios.post('/newSession', {sessionName} )
         .then(()=>{
             console.log('Form submitted with session name:', sessionName);
-            navigate('/')})
+            navigate('/sessions')})
         .catch(()=>{console.log('Server Error')})
 
     };

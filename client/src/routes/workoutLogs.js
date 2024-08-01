@@ -5,9 +5,11 @@ import { Table, Card, Row, Col, Container, Form, Button, Accordion, Modal } from
 import { useParams } from 'react-router-dom';
 import useAuthCheck from '../hook/authCheck';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faPersonChalkboard, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import CreatableSelect from 'react-select/creatable';
+import { components } from 'react-select';
 
 
 function WorkoutLogs(){
@@ -194,22 +196,105 @@ function DoughnutChart({summary}){
 function InputForm({id, workouts, setWorkouts, setNeedsFetch}){
 
   const [newWorkout, setNewWorkout] = useState({exercise: '', weight: '', reps: ''});
+  const [exerciseOptions, setExerciseOptions] = useState(null);
+  const [selectedExercise, setSelectedExercise] = useState(null);
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get('/my-exercises');
+        if (response.data && Array.isArray(response.data)) {
+          const exercises = response.data.map(exercise => ({
+            value: exercise,
+            label: exercise,
+            isNew: false
+          }));
+          setExerciseOptions(exercises);
+        } else {
+          setExerciseOptions([]);
+        }
+      } catch (error) {
+        console.error('Error fetching exercises:', error);
+        setExerciseOptions([]); // Ensure the dropdown is empty if there's an error
+      }
+    };
+
+    fetchExercises();
+  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewWorkout({ ...newWorkout, [name]: value });
   };
 
+  const handleExerciseChange = (selectedOption) => {
+    setSelectedExercise(selectedOption);
+    setNewWorkout({ ...newWorkout, exercise: selectedOption ? selectedOption.value : '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`/workoutlogs/${id}`, newWorkout);
+      // Check if the exercise is new
+      if (selectedExercise && !exerciseOptions.some(option => option.value === selectedExercise.value)) {
+        // Add the new exercise to the database
+        await axios.post(`/add-my-exercise`, { exercise: selectedExercise.value });
+
+        // Update the exercise options to include the new exercise
+        setExerciseOptions([...exerciseOptions, { value: selectedExercise.value, label: selectedExercise.value }]);
+      }
+
+      const response = await axios.post(`/add-workout/${id}`, newWorkout);
       setWorkouts([...workouts, response.data]);
       setNewWorkout({ exercise: '', weight: '', reps: '' });
+      setSelectedExercise(null);
       setNeedsFetch(true);
     } catch (error) {
       console.error('Error submitting data: ', error);
     }
+  };
+
+  const handleCopyRecent = async () => {
+    if (workouts.length > 0) {
+      const recentWorkout = workouts[workouts.length - 1];
+      try {
+        // Add the copied workout
+        const response = await axios.post(`/workoutlogs/${id}`, recentWorkout);
+        setWorkouts([...workouts, response.data]);
+        setNeedsFetch(true);
+      } catch (error) {
+        console.error('Error copying recent workout:', error);
+      }
+    }
+  };
+
+  const handleDeleteExercise = async (option) => {
+    try {
+      // Remove the exercise from the database
+      await axios.post(`/remove-my-exercise`, { exercise: option.value });
+
+      // Update the exercise options to remove the deleted exercise
+      setExerciseOptions(exerciseOptions.filter(ex => ex.value !== option.value));
+    } catch (error) {
+      console.error('Error deleting exercise:', error);
+    }
+  };
+
+  // Custom Option component to include delete functionality
+  const Option = (props) => {
+    return (
+      <components.Option {...props}>
+        <span>{props.data.label}</span>
+        <FontAwesomeIcon
+          icon={faTrashAlt}
+          style={{ color: '#cc0000', marginLeft: '5px', cursor: 'pointer', fontSize: '0.8em' }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleDeleteExercise(props.data);
+          }}
+        />
+      </components.Option>
+    );
   };
 
   return(
@@ -222,7 +307,20 @@ function InputForm({id, workouts, setWorkouts, setNeedsFetch}){
           <Form.Group as={Row} className="mb-3" controlId="formExercise">
             <Form.Label column sm={5}>Exercise</Form.Label>
             <Col sm={7}>
-              <Form.Control type="text" name="exercise" value={newWorkout.exercise} onChange={handleInputChange} required />
+              {/* <Form.Control type="text" name="exercise" value={newWorkout.exercise} onChange={handleInputChange} required /> */}
+              <CreatableSelect
+                components={{ Option }} // Use the custom Option component
+                options={exerciseOptions}
+                onChange={handleExerciseChange}
+                value={selectedExercise}
+                isClearable
+                placeholder="Exercise"
+                required
+                onCreateOption={(inputValue) => {
+                  setSelectedExercise({ value: inputValue, label: inputValue});
+                  setNewWorkout({ ...newWorkout, exercise: inputValue });
+                }}
+              />
             </Col>
           </Form.Group>
           <Form.Group as={Row} className="mb-3" controlId="formWeight">
@@ -237,7 +335,14 @@ function InputForm({id, workouts, setWorkouts, setNeedsFetch}){
               <Form.Control type="number" name="reps" value={newWorkout.reps} onChange={handleInputChange} required />
             </Col>
           </Form.Group>
-          <Button type="submit">Add Workout</Button>
+          <Row>
+          <Col xs={12} sm={6} className="d-flex justify-content-center mb-2 mb-sm-0">
+              <Button type="submit" className="w-100">Add Workout</Button>
+            </Col>
+            <Col xs={12} sm={6} className="d-flex justify-content-center">
+              <Button variant="secondary" type="button" className="w-100" onClick={handleCopyRecent}>Copy Recent</Button>
+            </Col>
+          </Row>
         </Form>
       </Card.Body>
     </Card>

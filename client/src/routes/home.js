@@ -4,37 +4,49 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser } from '../store/userSlice';
 import axios from './../axios.js';
+import './../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+
 function Home(){
+
+    let navigate = useNavigate();
   
     const [show, setShow] = useState(false);
+    const [fadeIn, setFadeIn] = useState(false);
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
 
+    useEffect(() => {
+        setFadeIn(true);
+    }, []);
+
     return(
-        <Container className="mt-5">
+        <Container className={`mt-5 fade-in ${fadeIn ? 'fade-in-visible' : ''}`}>
             <Row className="justify-content-center">
             <Col md={10}>
                 <Card className="text-center shadow-lg">
                 <Card.Body>
                     <Card.Title as="h2" className="mb-4">
-                    Welcome to the Athlete Management System
+                    Welcome to the Athlete Management System💪
                     </Card.Title>
                     <Card.Text> 
                         <Greetings />
                     </Card.Text>
-                    <SearchCoach show={show} handleClose={handleClose} />
                 </Card.Body>
                 </Card>
+                {/* <SearchCoach show={show} handleClose={handleClose} /> */}
             </Col>
             </Row>
-            <CoachCard handleShow={handleShow} />
+            {/* <CoachCard handleShow={handleShow} /> */}
+            <button className="btn btn-primary sticky-button" onClick={() => { navigate('/newsession'); }}>
+                Start Workout
+            </button>
         </Container>
-    )
-}
+    );
+};
 
 function CoachCard({handleShow}){
     return(
@@ -124,6 +136,8 @@ function Greetings(){
         )
     }
 }
+
+
 
 export default Home;
 

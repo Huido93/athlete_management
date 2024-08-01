@@ -13,7 +13,7 @@ function Register(){
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
     let [passwordCheck, setPasswordCheck] = useState('')
-    let [role, setRole] = useState('')
+    let [role, setRole] = useState('ahtlete')
 
     function handleSubmit (event) {
         event.preventDefault();
