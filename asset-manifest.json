@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/athlete_management/static/css/main.9d5d2868.css",
-    "main.js": "/athlete_management/static/js/main.00ed6a13.js",
+    "main.css": "/athlete_management/static/css/main.60b79c40.css",
+    "main.js": "/athlete_management/static/js/main.89c4074f.js",
     "static/js/453.9aa33bb9.chunk.js": "/athlete_management/static/js/453.9aa33bb9.chunk.js",
     "service-worker.js": "/athlete_management/service-worker.js",
     "static/media/landing-bg.png": "/athlete_management/static/media/landing-bg.08a15b6a2514179d9a8e.png",
     "index.html": "/athlete_management/index.html",
-    "main.9d5d2868.css.map": "/athlete_management/static/css/main.9d5d2868.css.map",
-    "main.00ed6a13.js.map": "/athlete_management/static/js/main.00ed6a13.js.map",
+    "main.60b79c40.css.map": "/athlete_management/static/css/main.60b79c40.css.map",
+    "main.89c4074f.js.map": "/athlete_management/static/js/main.89c4074f.js.map",
     "453.9aa33bb9.chunk.js.map": "/athlete_management/static/js/453.9aa33bb9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9d5d2868.css",
-    "static/js/main.00ed6a13.js"
+    "static/css/main.60b79c40.css",
+    "static/js/main.89c4074f.js"
   ]
 }
